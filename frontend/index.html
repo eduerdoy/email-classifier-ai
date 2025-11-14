@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Classifier AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container-input">
+
+        <h1>Classificador de Emails IA</h1>
+
+        <span class="subtitle">Classifique seus emails de forma inteligente</span>
+
+        <!-- Abas de navegação -->
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('text')">Digitar Email</button>
+            <button class="tab" onclick="showTab('upload')">Upload de Arquivo</button>
+        </div>
+        
+        <!-- Tab 1: Digitar Email -->
+        <div id="tab-text" class="tab-content active">
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="sender">Remetente (Email):</label>
+                    <input type="email" id="sender" name="sender" placeholder="exemplo@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Assunto:</label>
+                    <input type="text" id="subject" name="subject" placeholder="Digite o assunto do email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="body">Mensagem:</label>
+                    <textarea id="body" name="body" rows="6" placeholder="Digite o conteúdo do email..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-primary">Classificar Email</button>
+            </form>
+        </div>
+        
+
+        <!-- Tab 2: Upload de Arquivo -->
+        <div id="tab-upload" class="tab-content">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="sender-upload">Remetente (Email):</label>
+                    <input type="email" id="sender-upload" name="sender" placeholder="exemplo@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject-upload">Assunto (Opcional):</label>
+                    <input type="text" id="subject-upload" name="subject" placeholder="Email importado">
+                </div>
+                
+                <div class="form-group">
+                    <label for="file">Arquivo (TXT ou PDF):</label>
+                    <input type="file" id="file" name="file" accept=".txt,.pdf" required>
+                    <small>Formatos aceitos: .txt, .pdf (Máx: 5MB)</small>
+                </div>
+                
+                <button type="submit" class="btn-primary">Upload e Classificar</button>
+            </form>
+        </div>
+        
+        </div>
+
+        <div class=container-output>
+
+        <!-- Loading -->
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+        
+        <!-- Resultado -->
+        <div id="resultado" class="resultado" style="display: none;">
+            <h2>Resultado da Classificação</h2>
+            
+            <div class="info-box">
+                <div class="info-item">
+                    <strong>Categoria:</strong>
+                    <span id="category" class="badge"></span>
+                </div>
+                <!-- <div class="info-item">
+                    <strong>Confiança:</strong>
+                    <span id="confidence"></span>
+                </div>
+                <div class="info-item">
+                    <strong>Keywords:</strong>
+                    <span id="keywords"></span>
+                </div> -->
+            </div>
+            
+            <div class="response-box">
+                <h3>💬 Resposta Sugerida:</h3>
+                <p id="suggested-reply"></p>
+                <button onclick="copyResponse()" class="btn-secondary">📋 Copiar Resposta</button>
+            </div>
+            
+            <!-- Informações do arquivo (só aparece no upload) -->
+            <div id="file-info" class="file-info" style="display: none;">
+                <h3>📄 Informações do Arquivo:</h3>
+                <p><strong>Nome:</strong> <span id="filename"></span></p>
+                <p><strong>Tipo:</strong> <span id="filetype"></span></p>
+                <details>
+                    <summary>Ver preview do texto extraído</summary>
+                    <pre id="extracted-text"></pre>
+                </details>
+            </div>
+        </div>
+
+        </div>
+
+    
+    
+    <script src="script.js"></script>
+</body>
+</html>
