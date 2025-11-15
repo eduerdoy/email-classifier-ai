@@ -40,6 +40,8 @@ email-classifier-ai/
 │   │   └── file_service.py         # Extração de texto (TXT/PDF)
 │   ├── config.py                   # Configurações centralizadas
 │   ├── main.py                     # API FastAPI
+|   ├── Procfile                    # Para deploy
+|   ├── Runtime.txt                 # Para deploy
 │   ├── schemas.py                  # Modelos Pydantic
 │   ├── requirements.txt            # Dependências Python
 │   └── runtime.txt                 # Versão do Python (deploy)
@@ -122,113 +124,23 @@ python -m http.server 5500
 
 ### **URLs da aplicação:**
 
-| Serviço | URL |
-|---------|-----|
-| **Frontend (Vercel)** | https://email-classifier-ai.vercel.app |
-| **Backend (Render)** | https://email-classifier-ai-backend.onrender.com |
-| **API Docs (Swagger)** | https://email-classifier-ai-backend.onrender.com/docs |
 
-### **⚠️ Limitações do Free Tier:**
+| **Vercel** | https://email-classifier-ai-ten.vercel.app |
 
-#### **Google Gemini AI (Free Tier):**
-- ✅ **10 requisições por minuto (RPM)**
-- ✅ **1.500 requisições por dia (RPD)**
-- ✅ **1 milhão de tokens por minuto (TPM)**
-- ⚠️ **Adequado para:** Demonstrações, testes e uso leve
-- ⚠️ **Não recomendado para:** Produção em larga escala
 
-#### **Render (Free Tier - Backend):**
-- ⚠️ **Servidor hiberna após 15 minutos de inatividade**
-- ⚠️ **Cold start:** Primeira requisição pode levar 30-60 segundos
-- ✅ **Requisições seguintes:** Normais (< 2 segundos)
-- ✅ **750 horas gratuitas por mês** (suficiente para uso contínuo)
-
-#### **Vercel (Free Tier - Frontend):**
-- ✅ **100 GB de bandwidth por mês**
-- ✅ **Deploy instantâneo** (sem cold start)
-- ✅ **HTTPS automático**
-- ✅ **Ideal para:** Projetos pessoais e portfólio
 
 ### **💡 Dica:**
 > Se ao acessar pela primeira vez o backend demorar, **aguarde ~30 segundos**. O servidor gratuito está iniciando. As próximas requisições serão rápidas!
 
 ---
 
-## 📚 Documentação da API
-
-Após iniciar o servidor, acesse:
-
-- **Swagger UI:** http://localhost:8000/docs
-- **ReDoc:** http://localhost:8000/redoc
-
-### **Endpoints principais**
-
-#### **POST /classify**
-Classifica email via texto direto
-
-**Request:**
-```json
-{
-  "sender": "exemplo@email.com",
-  "subject": "Reunião de projeto",
-  "body": "Gostaria de agendar uma reunião para discutir o andamento do projeto X."
-}
-```
-
-**Response:**
-```json
-{
-  "category": "Produtivo",
-  "confidence": 0.92,
-  "suggested_reply": "Olá! Recebemos sua solicitação de reunião. Nossa equipe está verificando a disponibilidade de agenda e retornará em breve com as opções de horário. Agradecemos o contato!",
-  "keywords": ["reunião", "projeto", "agendar", "discutir"],
-  "sentiment": "POSITIVE"
-}
-```
-
-#### **POST /classify/upload**
-Classifica email via arquivo TXT ou PDF
-
-**Form Data:**
-- `file`: arquivo.pdf ou arquivo.txt
-- `sender`: exemplo@email.com
-- `subject`: "Assunto" (opcional)
-
-**Response:**
-```json
-{
-  "category": "Improdutivo",
-  "confidence": 0.88,
-  "suggested_reply": "Olá! Muito obrigado pela sua mensagem. É sempre um prazer receber notícias suas!",
-  "keywords": ["feliz", "aniversário", "parabéns"],
-  "sentiment": "POSITIVE",
-  "filename": "email.pdf",
-  "file_type": "application/pdf",
-  "extracted_text_preview": "Parabéns pelo seu aniversário! Desejo muitas felicidades..."
-}
-```
-
-#### **GET /health**
-Verifica status da API
-
-**Response:**
-```json
-{
-  "status": "ok",
-  "message": "Email Classifier AI está funcionando"
-}
-```
-
----
-
 ## 🧠 Tecnologias Utilizadas
 
 ### **Backend**
-- **FastAPI** 0.104.1 - Framework web moderno e de alta performance
-- **Google Gemini AI** 2.0 Flash - LLM para classificação e geração de respostas
-- **NLTK** 3.8.1 - Processamento de linguagem natural (stop words, stemming)
-- **PyPDF2** 3.0.1 - Extração de texto de arquivos PDF
-- **Transformers** (Hugging Face) - Análise de sentimento (fallback)
+- **FastAPI** - Framework web moderno e de alta performance
+- **Google Gemini AI**  - LLM para classificação e geração de respostas
+- **NLTK** - Processamento de linguagem natural (stop words, stemming)
+- **PyPDF2** - Extração de texto de arquivos PDF
 - **Pydantic** 2.5.0 - Validação de dados e schemas
 
 ### **Frontend**
@@ -237,7 +149,7 @@ Verifica status da API
 - **CSS Grid/Flexbox** - Layout responsivo (2 colunas desktop / empilhado mobile)
 
 ### **Deploy**
-- **Render** - Hospedagem do backend (Python/FastAPI)
+- **Railway** - Hospedagem do backend (Python/FastAPI)
 - **Vercel** - Hospedagem do frontend (SPA estático)
 - **GitHub** - Controle de versão e CI/CD automático
 
@@ -269,7 +181,7 @@ Texto processado → Gemini AI → Categoria + Confiança
 ### **Sistema de fallback:**
 
 ```
-Gemini AI falha? → Classificador de sentimento (transformers)
+Gemini AI falha? → Classificador de sentimento
                  → POSITIVE/NEGATIVE/NEUTRAL
                  → Categoria baseada em sentimento
 ```
@@ -323,7 +235,6 @@ Emails sociais, de cortesia ou sem ação necessária:
 #### **Recursos gerais:**
 - ✅ **Spinner centralizado** durante processamento
 - ✅ **Copiar resposta** com um clique
-- ✅ **Preview de arquivo** (nome, tipo, texto extraído)
 - ✅ **Badges coloridos** para categorias (verde/vermelho)
 - ✅ **Animações suaves** (fade in, slide in)
 
@@ -358,19 +269,6 @@ GEMINI_MODEL = "gemini-2.0-flash-exp"  # Padrão (rápido + barato)
 # "gemini-1.5-pro"       → Máxima qualidade, custo alto
 ```
 
-### **Adicionar novas stop words:**
-
-```python
-# backend/services/nlp_service.py
-
-PORTUGUESE_STOP_WORDS = {
-    'de', 'a', 'o', 'que', 'e', 'do', 'da', 'em', 'um', 'para',
-    # ... adicione mais aqui
-    'sua_palavra_customizada',
-}
-```
-
----
 
 ## 🧪 Exemplos de Uso
 
@@ -441,10 +339,6 @@ Corpo: Olá! Desejo um feliz aniversário e muitas realizações neste
 - ⚠️ **1.500 requisições/dia** - ~200 emails classificados (considerando retries)
 - ⚠️ **Rate limit 429** pode ocorrer em uso intenso
 
-### **Render (Free Tier):**
-- ⚠️ **Cold start de 30-60s** após inatividade
-- ⚠️ **Servidor hiberna** após 15 minutos sem uso
-- ⚠️ **Não recomendado** para aplicações críticas
 
 ### **Processamento de PDFs:**
 - ⚠️ **Limite de 5MB** por arquivo
@@ -490,11 +384,6 @@ Este projeto foi desenvolvido como **case técnico** para a **AutoU**.
 
 ## 📞 Suporte
 
-### **Encontrou um bug?**
-Abra uma [issue no GitHub](https://github.com/seu-usuario/email-classifier-ai/issues)
-
-### **Tem alguma dúvida?**
-Entre em contato via email ou LinkedIn
 
 ### **Quer contribuir?**
 Pull requests são bem-vindos! 🚀
