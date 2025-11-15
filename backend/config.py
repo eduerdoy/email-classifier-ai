@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings:
-    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL: str = "gemini-2.0-flash"
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY")
+    GEMINI_MODEL: str = "gemini-2.0-flash-exp"
     TEMPERATURE: float = 0.7
     CLASSIFICATION_TEMPERATURE: float = 0.1
     MAX_OUTPUT_TOKENS: int = 256

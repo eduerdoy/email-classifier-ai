@@ -1,6 +1,5 @@
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8000' 
-    : 'https://email-classifier-ai-production.up.railway.app';
+const API_URL = 'http://localhost:8000' || 
+'https://email-classifier-ai-ten.vercel.app/';
 
 // Gerenciamento de abas
 function showTab(tabName) {
