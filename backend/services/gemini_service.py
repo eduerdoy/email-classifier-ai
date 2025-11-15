@@ -30,6 +30,7 @@ Sua tarefa é classificar emails em APENAS duas categorias:
 - Emails sobre aviso que confirme o pagamento de fatura
 - Emails ou propagandas SPAM
 - Avisos sobre alterações de senha
+- Se não houver contexto profissional claro
 
 IMPORTANTE:
 - Se o email mencionar aprovação em "processo seletivo", "vaga", "entrevista", "aprovado", "candidatura" → É PRODUTIVO

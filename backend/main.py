@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from schemas import MessageRequest, MessageResponse, FileUploadResponse
 from services.classifier_service import classifier_service
 from services.file_service import file_service
+import nltk
 
 app = FastAPI(
     title="Email Classifier AI",
@@ -27,15 +28,16 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     # Download de recursos NLTK
-    import nltk
-    try:
-        nltk.data.find('tokenizers/punkt')
-    except LookupError:
-        nltk.download('punkt')
-    try:
-        nltk.data.find('corpora/stopwords')
-    except LookupError:
-        nltk.download('stopwords')
+    datasets = [
+        ("tokenizers/punkt", "punkt"),
+        ("corpora/stopwords", "stopwords"),
+        ("sentiment/vader_lexicon", "vader_lexicon")
+    ]
+    for path, pkg in datasets:
+        try:
+            nltk.data.find(path)
+        except LookupError:
+            nltk.download(pkg)
 
 
 @app.post("/classify", response_model=MessageResponse)
