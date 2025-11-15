@@ -27,18 +27,21 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    # Download de recursos NLTK
-    datasets = [
+    import os, pathlib, nltk
+    nltk_dir = os.getenv("NLTK_DATA", "/tmp/nltk_data")
+    pathlib.Path(nltk_dir).mkdir(parents=True, exist_ok=True)
+    if nltk_dir not in nltk.data.path:
+        nltk.data.path.append(nltk_dir)
+    resources = [
+        ("sentiment/vader_lexicon", "vader_lexicon"),
         ("tokenizers/punkt", "punkt"),
         ("corpora/stopwords", "stopwords"),
-        ("sentiment/vader_lexicon", "vader_lexicon")
     ]
-    for path, pkg in datasets:
+    for path, pkg in resources:
         try:
             nltk.data.find(path)
         except LookupError:
-            nltk.download(pkg)
-
+            nltk.download(pkg, download_dir=nltk_dir)
 
 @app.post("/classify", response_model=MessageResponse)
 async def classify_email(data: MessageRequest):
