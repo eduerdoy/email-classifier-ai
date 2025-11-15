@@ -37,8 +37,6 @@ async def startup_event():
     except LookupError:
         nltk.download('stopwords')
 
-# Incluir rotas
-app.include_router(email_routes.router)
 
 @app.post("/classify", response_model=MessageResponse)
 async def classify_email(data: MessageRequest):
