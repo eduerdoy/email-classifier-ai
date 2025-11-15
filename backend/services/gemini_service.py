@@ -8,7 +8,9 @@ genai.configure(api_key=settings.GEMINI_API_KEY)
 class GeminiService:
     """Serviço de integração com Google Gemini"""
     
-    CLASSIFICATION_INSTRUCTION = """Você é um classificador especializado de emails corporativos.
+    CLASSIFICATION_INSTRUCTION = """
+    
+    Você é um classificador especializado de emails corporativos.
 
 Sua tarefa é classificar emails em APENAS duas categorias:
 
@@ -22,6 +24,7 @@ Sua tarefa é classificar emails em APENAS duas categorias:
 - Qualquer assunto que exija ação profissional
 
 
+
 **IMPRODUTIVO**: Emails sociais, pessoais ou de cortesia, incluindo:
 - Felicitações (aniversário, natal, ano novo, casamento)
 - Cumprimentos diários sem contexto profissional
@@ -31,6 +34,7 @@ Sua tarefa é classificar emails em APENAS duas categorias:
 - Emails ou propagandas SPAM
 - Avisos sobre alterações de senha
 - Se não houver contexto profissional claro
+- Testes de mensagens
 
 IMPORTANTE:
 - Se o email mencionar aprovação em "processo seletivo", "vaga", "entrevista", "aprovado", "candidatura" → É PRODUTIVO
@@ -41,12 +45,12 @@ Responda APENAS com uma destas opções exatas:
 - "Produtivo" 
 - "Improdutivo"
 
-Não adicione explicações, apenas a categoria."""
+Não adicione explicações, apenas a categoria (Produtivo ou Improdutivo)."""
 
     RESPONSE_INSTRUCTIONS = {
-        "Improdutivo": """Você é um assistente de email amigável em português brasileiro.
+        "Improdutivo": """Você é um assistente de email amigável, mas formal, em português brasileiro.
 
-Sua tarefa é escrever respostas calorosas, naturais e pessoais para emails sociais.
+Sua tarefa é escrever respostas calorosas, naturais e pessoais para emails sociais (não use emojis).
 
 Regras:
 - Seja cordial, empático e humano
@@ -54,7 +58,7 @@ Regras:
 - Mantenha a resposta em 2-3 frases
 - Retribua o sentimento do remetente
 - Não use jargões corporativos
-- Se em alguma parte do email estiver dizendo que é uma resposta automática, não respota e considere improdutivo
+- Se em alguma parte do email estiver dizendo que é uma resposta automática, não responda e considere improdutivo
 - Não mencione que você é uma IA""",
 
         "Produtivo": """Você é um assistente de email profissional em português brasileiro.
@@ -82,6 +86,7 @@ Regras:
             
             model = genai.GenerativeModel(
                 model_name=settings.GEMINI_MODEL,
+                system_instruction=self.CLASSIFICATION_INSTRUCTION
             )
             
             prompt = f"""Classifique este email:
@@ -97,7 +102,7 @@ Regras:
                 prompt,
                 generation_config=genai.types.GenerationConfig(
                     temperature=settings.CLASSIFICATION_TEMPERATURE,
-                    max_output_tokens=10,
+                    max_output_tokens=5,
                 )
             )
             
@@ -112,7 +117,7 @@ Regras:
             else:
                 # Fallback
                 print(f"Resposta inesperada, usando fallback")
-                return "Produtivo", 0.50
+                return self.CLASSIFICATION_INSTRUCTION.splitlines()[-2].split(":")[-1].strip(), 0.50
                 
         except Exception as e:
             print(f"Erro na classificação: {e}")
@@ -140,9 +145,9 @@ Regras:
             str: Resposta gerada
         """
         try:
-            print(f"Gerando resposta com Gemini...")
+            print(f"Gerando resposta com Gemini...")    
             
-            system_instruction = self.RESPONSE_INSTRUCTIONS[category]
+            system_instruction = self.RESPONSE_INSTRUCTIONS.get(category, self.RESPONSE_INSTRUCTIONS["Produtivo"])
             
             if category == "Improdutivo":
                 prompt = f"""Responda este email social de forma amigável:
@@ -178,11 +183,15 @@ Confirme o recebimento de forma profissional."""
                 )
             )
             
-            return response.text.strip()
+            text = response.text.strip() if hasattr(response, "text") else ""
             
+            print(f"Gemini retornou: '{text}'")
+            
+            return text
+                
         except Exception as e:
-            print(f"Erro na geração de resposta: {e}")
-            raise
+            print(f"Erro ao gerar resposta: {e}")
+            return "Desculpe, não consegui gerar uma resposta no momento."
 
 # Instância singleton
 gemini_service = GeminiService()

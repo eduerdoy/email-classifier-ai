@@ -1,5 +1,7 @@
 const API_URL = 'https://email-classifier-ai-production.up.railway.app';
 
+// const API_URL = 'http://127.0.0.1:8000';
+
 // Gerenciamento de abas
 function showTab(tabName) {
     // Remove active de todas as abas

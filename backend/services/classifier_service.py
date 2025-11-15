@@ -121,7 +121,7 @@ class ClassifierService:
             "bom dia","nada","férias","feriado","festa","casamento","abraço","não responder",
             "email automático","noreply","no-reply","teste"
         ]
-        
+            
         p_matches = [k for k in produtivo if k in t]
         i_matches = [k for k in improdutivo if k in t]
         p = len(p_matches)

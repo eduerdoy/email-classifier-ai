@@ -7,7 +7,8 @@ class Settings:
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY")
     GEMINI_MODEL: str = "gemini-2.0-flash-exp"
     TEMPERATURE: float = 0.7
-    CLASSIFICATION_TEMPERATURE: float = 0.1
+    CLASSIFICATION_TEMPERATURE: float = 0.0
+    RESPONSE_TEMPERATURE: float = 0.1
     MAX_OUTPUT_TOKENS: int = 256
     MIN_RESPONSE_WORDS: int = 8
     TOP_KEYWORDS: int = 5

@@ -19,9 +19,9 @@ app.add_middleware(
         "http://127.0.0.1:5500",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
-        "https://email-classifier-ai-ten.vercel.app",
-        "*"
+        "https://email-classifier-ai-ten.vercel.app"
     ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
