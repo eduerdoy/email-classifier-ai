@@ -22,7 +22,6 @@ app.add_middleware(
         "https://email-classifier-ai-ten.vercel.app",
         "*"
     ],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

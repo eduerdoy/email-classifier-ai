@@ -82,7 +82,6 @@ Regras:
             
             model = genai.GenerativeModel(
                 model_name=settings.GEMINI_MODEL,
-                system_instruction=self.CLASSIFICATION_INSTRUCTION
             )
             
             prompt = f"""Classifique este email:
