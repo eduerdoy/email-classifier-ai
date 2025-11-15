@@ -1,4 +1,4 @@
-const API_URL = 'https://email-classifier-ai-ten.vercel.app/';
+const API_URL = 'email-classifier-ai-production.up.railway.app';
 
 // Gerenciamento de abas
 function showTab(tabName) {
